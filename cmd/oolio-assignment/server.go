@@ -6,10 +6,16 @@ import (
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
+	httpSwagger "github.com/swaggo/http-swagger"
 )
 
 func initWebServer(processConfig handler.ProcessConfig) {
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
-	http.ListenAndServe(":8080", r)
+	r.Get("/swagger/*", httpSwagger.WrapHandler)
+	// Your other routes
+	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("Hello, world!"))
+	})
+	http.ListenAndServe(":8089", r)
 }
