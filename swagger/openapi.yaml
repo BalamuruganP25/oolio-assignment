@@ -1,0 +1,225 @@
+openapi: 3.0.3
+info:
+  title: Product API
+  description: API for managing products and orders
+  version: 1.0.0
+
+paths:
+  /v1/product:
+    post:
+      summary: Create a product
+      description: This endpoint allows you to create a new product with a name, price, and category.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - price
+                - category
+              properties:
+                name:
+                  type: string
+                price:
+                  type: number
+                  format: float
+                category:
+                  type: string
+      responses:
+        '201':
+          description: Product created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Product already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    get:
+      summary: Get list of products
+      description: Retrieves a paginated list of products using optional query parameters `page` and `limit`.
+      operationId: getProducts
+      parameters:
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A list of products
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /v1/product/{product_id}:
+    get:
+      summary: Get product by ID
+      description: Retrieves a product using its ID.
+      operationId: getProductById
+      parameters:
+        - name: product_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Product found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '400':
+          description: Invalid product ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Product not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /v1/order:
+    post:
+      summary: Create an order
+      description: Create a new order with a list of products and an optional coupon code.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderRequest'
+      responses:
+        '201':
+          description: Order created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '400':
+          description: Invalid request or product ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Failed to create order
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    Product:
+      type: object
+      required:
+        - id
+        - name
+        - price
+        - category
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        price:
+          type: number
+          format: float
+        category:
+          type: string
+
+    OrderItem:
+      type: object
+      required:
+        - product_id
+        - quantity
+      properties:
+        product_id:
+          type: string
+        quantity:
+          type: integer
+
+    OrderRequest:
+      type: object
+      required:
+        - items
+      properties:
+        coupon_code:
+          type: string
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderItem'
+
+    Order:
+      type: object
+      required:
+        - items
+        - products
+      properties:
+        coupon_code:
+          type: string
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderItem'
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/Product'
+
+    ErrorResponse:
+      type: object
+      required:
+        - title
+        - details
+      properties:
+        title:   
+          type: string
+          example: "internal server error"
+        details:
+          type: string
+          example: "product id should not be empty"

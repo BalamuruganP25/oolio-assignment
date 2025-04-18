@@ -15,5 +15,14 @@ func main() {
 
 	CurdRepo := repository.NewCurdRepo(db)
 	processConfig.CurdRepo = CurdRepo
-	initWebServer(processConfig)
+	MigrateDBRepo(db)
+
+	log.Println("Please wait loading valid coupons process started")
+	validCoupons, err := LoadValidCoupons()
+	if err != nil {
+		log.Fatalf("Failed to load valid coupons: %v", err)
+	}
+	log.Println("loading coupons process complete")
+
+	initWebServer(processConfig, validCoupons)
 }
