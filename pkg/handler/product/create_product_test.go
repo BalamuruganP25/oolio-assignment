@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"log"
 	"net/http"
 	"net/http/httptest"
 	"oolio-assignment/pkg/handler"
@@ -77,7 +78,7 @@ func (s *creatProductTestSuite) TestCreateProductFailedToCreateProduct() {
 	s.executeTestSuiteRequest(req)
 	s.Equal(http.StatusInternalServerError, s.recorder.Code)
 	s.JSONEq(`{
-		"tittle":"internal server error",
+		"title":"internal server error",
 		"details":"failed to create product - DB error"
 		}`, s.recorder.Body.String())
 
@@ -92,7 +93,7 @@ func (s *creatProductTestSuite) TestCreateProductFailedProductAlreadExist() {
 	}`, "butter", 11.5, "veg")
 	s.executeTestSuiteRequest(req)
 	s.Equal(http.StatusConflict, s.recorder.Code)
-	s.JSONEq(`{"tittle":"conflict","details":"product already exists"}`, s.recorder.Body.String())
+	s.JSONEq(`{"title":"conflict","details":"product already exists"}`, s.recorder.Body.String())
 
 }
 
@@ -112,7 +113,7 @@ func (s *creatProductTestSuite) TestValidateProductReq() {
 				"category": "Fast Food"
 			}`,
 			wantStatus: http.StatusBadRequest,
-			wantError:  "name should be empty",
+			wantError:  "name shouldn't be empty",
 		},
 		{
 			name: "Missing Price",
@@ -123,7 +124,7 @@ func (s *creatProductTestSuite) TestValidateProductReq() {
 				"category": "Fast Food"
 			}`,
 			wantStatus: http.StatusBadRequest,
-			wantError:  "price should be empty",
+			wantError:  "price shouldn't be empty",
 		},
 	}
 
@@ -132,7 +133,10 @@ func (s *creatProductTestSuite) TestValidateProductReq() {
 			s.executeTestSuiteRequest(tc.reqBody)
 			s.Equal(tc.wantStatus, s.recorder.Code)
 			var errRes handler.ErrResponse
-			json.NewDecoder(s.recorder.Body).Decode(&errRes)
+			err := json.NewDecoder(s.recorder.Body).Decode(&errRes)
+			if err != nil {
+				log.Fatal("failed to run the test case")
+			}
 			s.Equal(tc.wantError, errRes.Details)
 		})
 	}

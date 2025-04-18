@@ -18,7 +18,7 @@ func CreateProduct(s *handler.ProcessConfig) http.HandlerFunc {
 
 			handler.ErrorResponse(w, http.StatusInternalServerError,
 				handler.ErrResponse{
-					Tittle:  "payload error",
+					Title:   "payload error",
 					Details: fmt.Sprintf("invalid request : %v", err),
 				},
 			)
@@ -29,7 +29,7 @@ func CreateProduct(s *handler.ProcessConfig) http.HandlerFunc {
 		err = validateProductReq(req)
 		if err != nil {
 			handler.ErrorResponse(w, http.StatusBadRequest, handler.ErrResponse{
-				Tittle:  "validation error",
+				Title:   "validation error",
 				Details: err.Error(),
 			},
 			)
@@ -48,7 +48,7 @@ func CreateProduct(s *handler.ProcessConfig) http.HandlerFunc {
 			if err.Error() == repository.ProductExist.Error() {
 				handler.ErrorResponse(w, http.StatusConflict,
 					handler.ErrResponse{
-						Tittle:  "conflict",
+						Title:   "conflict",
 						Details: repository.ProductExist.Error(),
 					},
 				)
@@ -57,7 +57,7 @@ func CreateProduct(s *handler.ProcessConfig) http.HandlerFunc {
 
 			handler.ErrorResponse(w, http.StatusInternalServerError,
 				handler.ErrResponse{
-					Tittle:  "internal server error",
+					Title:   "internal server error",
 					Details: fmt.Errorf("failed to create product - %w", err).Error(),
 				},
 			)

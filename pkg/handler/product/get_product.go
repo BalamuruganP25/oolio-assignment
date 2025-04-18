@@ -13,11 +13,12 @@ func GetProduct(config *handler.ProcessConfig) http.HandlerFunc {
 		pageStr := r.URL.Query().Get("page")
 		limitStr := r.URL.Query().Get("limit")
 
+		// get product list
 		product, err := config.CurdRepo.GetProduct(r.Context(), pageStr, limitStr)
 		if err != nil {
 			handler.ErrorResponse(w, http.StatusInternalServerError,
 				handler.ErrResponse{
-					Tittle:  "internal server error",
+					Title:  "internal server error",
 					Details: fmt.Errorf("failed to get product - %w", err).Error(),
 				},
 			)

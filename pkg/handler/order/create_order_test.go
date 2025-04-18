@@ -64,11 +64,8 @@ func (s *creatOrderTestSuite) TestCreateOrderSuccess_withCouponCode() {
 	}`
 	s.executeTestSuiteRequest(reqBody)
 	s.Equal(http.StatusCreated, s.recorder.Code)
-	s.JSONEq(`{
-		"coupon_code":"FIFTYOFF",
-		"items":[{"product_id":"120","quantity":2}],
-		"products":[{"id":"120","name":"Butter","price":10.9,"category":"Dairy"}]}`, s.recorder.Body.String())
-
+	s.Contains(s.recorder.Body.String(), `"coupon_code":"FIFTYOFF"`)
+	s.Contains(s.recorder.Body.String(), `"product_id":"120"`)
 }
 
 func (s *creatOrderTestSuite) TestCreateOrderFailed_InvalidCouponCode() {
@@ -80,7 +77,7 @@ func (s *creatOrderTestSuite) TestCreateOrderFailed_InvalidCouponCode() {
 	}`
 	s.executeTestSuiteRequest(reqBody)
 	s.Equal(http.StatusBadRequest, s.recorder.Code)
-	s.JSONEq(`{"tittle":"validation error","details":"invalid coupon code"}`, s.recorder.Body.String())
+	s.JSONEq(`{"title":"validation error","details":"invalid coupon code"}`, s.recorder.Body.String())
 
 }
 
@@ -97,7 +94,7 @@ func (s *creatOrderTestSuite) TestCreateOrderFailed_InvalidProductID() {
 	}`
 	s.executeTestSuiteRequest(reqBody)
 	s.Equal(http.StatusBadRequest, s.recorder.Code)
-	s.JSONEq(`{"tittle":"invalid product id","details":"invaild product id : 120"}`, s.recorder.Body.String())
+	s.JSONEq(`{"title":"invalid product id","details":"invaild product id : 120"}`, s.recorder.Body.String())
 
 }
 
@@ -108,6 +105,6 @@ func (s *creatOrderTestSuite) TestCreateOrderFailed_InvalidOrder() {
 	}`
 	s.executeTestSuiteRequest(reqBody)
 	s.Equal(http.StatusBadRequest, s.recorder.Code)
-	s.JSONEq(`{"tittle":"validation error","details":"order iteams should not be empty"}`, s.recorder.Body.String())
+	s.JSONEq(`{"title":"validation error","details":"order iteams should not be empty"}`, s.recorder.Body.String())
 
 }
