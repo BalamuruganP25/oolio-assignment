@@ -30,13 +30,14 @@ This service provides a RESTful API for managing products and creating orders. B
 
 Use the included `Makefile` to run and manage the project easily:
 
-| Command         | Description                     |
-|-----------------|---------------------------------|
-| `make run`      | Build and start services        |
-| `make build`    | Build Docker containers         |
-| `make stop`     | Stop and remove containers      |
-| `make dep`      | Install Go dependencies         |
-| `make test`     | Run all Go unit tests           |
+| Command         | Description                            |
+|-----------------|----------------------------------------|
+| `make run`      | Build and start services               |
+| `make build`    | Build Docker containers                |
+| `make stop`     | Stop and remove containers             |
+| `make dep`      | Install Go dependencies                |
+| `make test`     | Run all Go unit tests                  |
+| `make lint`     | Run code linter using `golangci-lint`  |
 
 ---
 
