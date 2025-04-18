@@ -15,7 +15,7 @@ func GetProductByID(config *handler.ProcessConfig) http.HandlerFunc {
 		productIDStr := chi.URLParam(r, "product_id")
 		if productIDStr == "" {
 			handler.ErrorResponse(w, http.StatusBadRequest, handler.ErrResponse{
-				Tittle:  "validation error",
+				Title:  "validation error",
 				Details: "product id should be empty",
 			})
 			return
@@ -24,7 +24,7 @@ func GetProductByID(config *handler.ProcessConfig) http.HandlerFunc {
 		product_id, err := strconv.Atoi(productIDStr)
 		if err != nil {
 			handler.ErrorResponse(w, http.StatusBadRequest, handler.ErrResponse{
-				Tittle:  "invalid Request",
+				Title:  "invalid Request",
 				Details: "product id should not be empty",
 			})
 
@@ -36,7 +36,7 @@ func GetProductByID(config *handler.ProcessConfig) http.HandlerFunc {
 		if err != nil {
 			if err == repository.RecordNotFound {
 				handler.ErrorResponse(w, http.StatusNotFound, handler.ErrResponse{
-					Tittle:  "Resource Not Found",
+					Title:  "Resource Not Found",
 					Details: "product not found",
 				},
 				)
@@ -44,7 +44,7 @@ func GetProductByID(config *handler.ProcessConfig) http.HandlerFunc {
 			}
 			handler.ErrorResponse(w, http.StatusInternalServerError,
 				handler.ErrResponse{
-					Tittle:  "internal server error",
+					Title:  "internal server error",
 					Details: fmt.Errorf("failed to get product - %w", err).Error(),
 				},
 			)

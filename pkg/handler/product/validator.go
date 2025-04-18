@@ -7,15 +7,15 @@ import (
 func validateProductReq(req Product) error {
 
 	if req.Name == "" {
-		return errors.New("name should be empty")
+		return errors.New("name shouldn't be empty")
 	}
 
 	if req.Price == 0 {
-		return errors.New("price should be empty")
+		return errors.New("price shouldn't be empty")
 	}
 
 	if req.Category == "" {
-		return errors.New("category should be empty")
+		return errors.New("category shouldn't be empty")
 	}
 
 	return nil

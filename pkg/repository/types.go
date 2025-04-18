@@ -13,6 +13,7 @@ type ProductModel struct {
 }
 
 type OrderModel struct {
+	Id         string            `json:"id"`
 	CouponCode string            `json:"coupon_code"`
 	Items      []OrderIteamModel `json:"items"`
 	Products   []ProductModel    `json:"products"`

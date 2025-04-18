@@ -21,10 +21,9 @@ func CreateOrder(config *handler.ProcessConfig, validCoupons map[string]bool) ht
 		// Decode the request body
 		err := json.NewDecoder(r.Body).Decode(&req)
 		if err != nil {
-
 			handler.ErrorResponse(w, http.StatusBadRequest,
 				handler.ErrResponse{
-					Tittle:  "invalid payload",
+					Title:   "invalid payload",
 					Details: fmt.Sprintf("invalid request : %v", err),
 				},
 			)
@@ -35,7 +34,7 @@ func CreateOrder(config *handler.ProcessConfig, validCoupons map[string]bool) ht
 		err = validateOrderReq(req, validCoupons)
 		if err != nil {
 			handler.ErrorResponse(w, http.StatusBadRequest, handler.ErrResponse{
-				Tittle:  "validation error",
+				Title:   "validation error",
 				Details: err.Error(),
 			},
 			)
@@ -47,7 +46,7 @@ func CreateOrder(config *handler.ProcessConfig, validCoupons map[string]bool) ht
 		if err != nil {
 			handler.ErrorResponse(w, http.StatusBadRequest,
 				handler.ErrResponse{
-					Tittle:  "invalid product id",
+					Title:   "invalid product id",
 					Details: err.Error(),
 				},
 			)
@@ -63,13 +62,14 @@ func CreateOrder(config *handler.ProcessConfig, validCoupons map[string]bool) ht
 		if err != nil {
 			handler.ErrorResponse(w, http.StatusInternalServerError,
 				handler.ErrResponse{
-					Tittle:  "internal server error",
+					Title:   "internal server error",
 					Details: fmt.Errorf("failed to create product - %w", err).Error(),
 				},
 			)
 		}
 
 		resp := repository.OrderModel{
+			Id:         order_id,
 			CouponCode: req.CouponCode,
 			Items:      req.Items,
 			Products:   productList,

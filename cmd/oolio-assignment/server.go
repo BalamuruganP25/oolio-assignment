@@ -32,7 +32,8 @@ func MigrateDBRepo(db *sql.DB) {
 }
 
 func initWebServer(config handler.ProcessConfig, validCoupons map[string]bool) {
-	log.Println("server is started")
+
+	log.Println("🚀 Server is starting on :8089...")
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 
@@ -54,11 +55,16 @@ func initWebServer(config handler.ProcessConfig, validCoupons map[string]bool) {
 	r.Get("/swagger/*", httpSwagger.Handler(
 		httpSwagger.URL("/swagger/openapi.yaml"),
 	))
-	http.ListenAndServe(":8089", r)
+
+	// ✅ Check for ListenAndServe error
+	if err := http.ListenAndServe(":8089", r); err != nil {
+		log.Fatalf("❌ Failed to start server: %v", err)
+	}
 }
 
 // LoadValidCoupons - read and store valid coupones
 func LoadValidCoupons() (map[string]bool, error) {
+
 	files := []string{
 		"/go/src/coupones/couponbase1.gz",
 		"/go/src/coupones/couponbase2.gz",

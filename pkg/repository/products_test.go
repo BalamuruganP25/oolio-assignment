@@ -18,7 +18,7 @@ type productRepoSuite struct {
 	curdRepo *repository.CurdRepository
 }
 
-func TestproductRepoSuite(t *testing.T) {
+func TestProductRepoSuite(t *testing.T) {
 	suite.Run(t, new(productRepoSuite))
 }
 
@@ -67,22 +67,25 @@ func (d *productRepoSuite) TestCreateProduct_DuplicateKey() {
 
 func (d *productRepoSuite) TestGetProductByProductID_Success() {
 	expected := repository.ProductModel{
-		ID:       "1",
+		ID:       "1", // This stays string if your model uses string for ID
 		Name:     "Shampoo",
 		Price:    100,
 		Category: "Haircare",
 	}
 
+	// Use int64 to match actual query arg
 	d.mock.ExpectQuery("SELECT id, name, price, category FROM products WHERE id = \\$1").
-		WithArgs(expected.ID).
+		WithArgs(int64(1)). // 🔧 Fix the argument type here
 		WillReturnRows(sqlmock.NewRows([]string{"id", "name", "price", "category"}).
 			AddRow(expected.ID, expected.Name, expected.Price, expected.Category))
 
-	product, err := d.curdRepo.GetProductByProductID(context.TODO(), 1)
+	// Call function with int64 to match your actual method signature
+	product, err := d.curdRepo.GetProductByProductID(context.TODO(), 1) // assuming this expects int
 	d.NoError(err)
 	d.Equal(expected, product)
 	d.NoError(d.mock.ExpectationsWereMet())
 }
+
 
 func (d *productRepoSuite) TestGetProductByProductID_NotFound() {
 	productID := 999
