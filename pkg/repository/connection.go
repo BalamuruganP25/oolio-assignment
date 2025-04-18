@@ -3,8 +3,9 @@ package repository
 import (
 	"database/sql"
 	"fmt"
-	_ "github.com/lib/pq"
 	"os"
+
+	_ "github.com/lib/pq"
 )
 
 func SetUpDB() (*sql.DB, error) {
