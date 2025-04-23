@@ -56,6 +56,7 @@ func CreateOrder(config *handler.ProcessConfig, validCoupons map[string]bool) ht
 		products, _ := json.Marshal(productList)
 		orders, _ := json.Marshal(req.Items)
 		order_id := uuid.New().String()
+        
 
 		// create order request
 		err = config.CurdRepo.CreateOrder(ctx, order_id, req.CouponCode, orders, products)

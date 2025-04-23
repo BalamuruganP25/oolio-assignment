@@ -13,10 +13,13 @@ type ProductModel struct {
 }
 
 type OrderModel struct {
-	Id         string            `json:"id"`
-	CouponCode string            `json:"coupon_code"`
-	Items      []OrderIteamModel `json:"items"`
-	Products   []ProductModel    `json:"products"`
+	Id          string            `json:"id"`
+	CouponCode  string            `json:"coupon_code"`
+	Items       []OrderIteamModel `json:"items"`
+	Products    []ProductModel    `json:"products"`
+	Discount    float64           `json:"discount"`
+	OrderAmount float64           `json:"order_amount"`
+	TotalAmount float64           `json:"total_amount"`
 }
 
 type OrderIteamModel struct {
